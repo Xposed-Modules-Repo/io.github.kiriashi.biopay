@@ -1,169 +1,109 @@
 <div align="center">
 
-<img src="docs/images/app-icon.png" width="160" alt="BioPay 应用图标" />
+<img src="https://raw.githubusercontent.com/kiriashi/BioPay/main/images/app-icon.png" width="160" alt="BioPay 应用图标" />
 
 <h1>BioPay</h1>
 
-<p>为支付应用开启原生般的生物识别认证体验</p>
-<p>Native-like biometric payment for WeChat, via LSPosed</p>
+<p>验证指纹或面容，轻松完成微信支付</p>
+<p>Pay in WeChat with your fingerprint or face</p>
 
 [![Release](https://img.shields.io/github/v/release/kiriashi/BioPay?style=flat)](https://github.com/kiriashi/BioPay/releases)
 [![Stars](https://img.shields.io/github/stars/kiriashi/BioPay?style=flat)](https://github.com/kiriashi/BioPay/stargazers)
 [![Downloads](https://img.shields.io/github/downloads/kiriashi/BioPay/total?style=flat)](https://github.com/kiriashi/BioPay/releases)
-[![License](https://img.shields.io/github/license/kiriashi/BioPay?style=flat)](LICENSE)
+[![License](https://img.shields.io/github/license/kiriashi/BioPay?style=flat)](https://github.com/kiriashi/BioPay/blob/main/LICENSE)
 [![Android](https://img.shields.io/badge/Android-9.0%2B-green.svg?style=flat)](https://developer.android.com)
-[![Kotlin](https://img.shields.io/badge/Kotlin-2.1-purple.svg?style=flat)](https://kotlinlang.org)
 [![LSPosed](https://img.shields.io/badge/LSPosed-API%20102-purple.svg?style=flat)](https://github.com/LSPosed/LSPosed)
 [![Telegram](https://img.shields.io/badge/Telegram-交流群-blue.svg?style=flat)](https://t.me/biopaychat)
 
-[简体中文](README.md) | [English](README_EN.md)
+[简体中文](README.md) | [English](https://github.com/kiriashi/BioPay/blob/main/README_EN.md)
 
 </div>
 
+
 ## 项目简介
 
-当微信官方在部分设备上不提供指纹／面容支付时，每次付款都要手动输入 6 位密码；而一加等 TEE 不可信设备还会因安全锁弹出“系统错误”类提示，打断支付流程。
+**BioPay** 让你在微信付款时，通过指纹或面容验证自动输入支付密码。即使微信没有为你的设备提供生物支付选项，也可以使用这套方式完成付款。
 
-**BioPay** 是基于 LSPosed（LibXposed API 102）的微信生物支付模块：指纹／面容验证通过后自动完成密码输入，弱面容老设备也能用，体验接近原生。
+支持微信内付款和其他应用调起的微信支付，采用强指纹+弱面容的认证组合，能完美兼容不同厂商设备。
 
 ## 界面预览
 
 <p align="center">
-  <img src="docs/images/settings.png" width="300" alt="模块设置页：生物支付开关与支付密码" />
+  <img src="https://raw.githubusercontent.com/kiriashi/BioPay/main/images/settings.png" width="300" alt="BioPay 设置页：选择验证方式并保存支付密码" />
 </p>
 
-## 功能特性
+## 可以做什么
 
-```
-┌───────────────────────────────────────────────┐
-│                    BioPay                     │
-│         微信原生般的生物识别支付体验          │
-└───────────────────────────────────────────────┘
-        │               │               │
-        ▼               ▼               ▼
- 【生物认证与输入】  【键盘感知与切换】    【设置与存储】           
- • 指纹／面容双通道  • 支付键盘弹出即验证  • 长按“设置”唤起设置页   
- • 弱面容兼容模式    • 高斯延迟模拟触摸    • AES-GCM 加密存 Keystore
- • 音量键快速重唤起  • 失败／取消落回键盘  • 调试日志默认关闭       
-```
+| 功能 | 使用体验 |
+| --- | --- |
+| 指纹、面容与双选模式 | 在设置页选择适合自己的验证方式 |
+| 自动输入支付密码 | 微信支付键盘出现时发起验证，通过后自动输入 |
+| Class 1 面容兼容 | 部分原本无法用于支付的面容设备也能使用，无需额外兼容模块 |
+| 指纹错误提示处理 | 自动跳过指定的微信指纹系统错误提示，并尝试继续页面流程 |
+| 手动输入回退 | 取消验证或遇到错误时，恢复支付键盘 |
+| 音量键切换 | 验证时按音量键返回键盘；在键盘状态下按音量键重新验证 |
+| 本机加密保存 | 支付密码加密保存在设备上，模块不联网 |
 
-- 指纹支付与面容支付双通道，弱面容兼容模式让更多 Android 9.0+ 设备可用。
-- 微信内付款、外部 App 调起的微信支付流程均可覆盖。
-- 音量键快速重新唤起生物识别，键盘状态下无需点按即可验证。
-- `我 → 设置 → 长按“设置”`唤起模块设置页，在设置页录入 6 位支付密码并选择生物方式。
+## 支付流程
 
-## 系统架构
-
-模块按职责分为 6 个包，依赖单向向下，`core` 零项目依赖：
-
-| 包 | 职责 |
-|---|---|
-| `entry` | Xposed 入口 `BioPayModule`＋组合根 `AppWiring`＋生命周期回调 |
-| `payment` | 生物支付特性：编排器、认证门、自动输入、键盘遮蔽、会话 |
-| `hook` | 微信 Hook：三路拦截器、顶层 Activity 获取、附加字段存储 |
-| `settings` | 设置页：纯 UI、业务控制器、对话框宿主、自绘 M3 控件 |
-| `data` | 数据层：AES-GCM 加密、密码版本策略、偏好存储 |
-| `core` | 基础：日志采集、XOR 编解码、Activity/dp 扩展 |
-
-```
-微信进程                    BioPay 模块
-┌─────────┐  setInputEditText  ┌──────────────────────────┐
-│ 支付键盘├───────────────────►│ KeyboardWindowHook       │
-└─────────┘                    └────────────┬─────────────┘
-                                            ▼
-                               ┌──────────────────────────┐
-                               │ Controller → Gate        │──► 系统生物识别对话框
-                               └────────────┬─────────────┘
-                                            │ 验证通过
-                                            ▼
-                               ┌──────────────────────────┐
-                               │ PasswordAutoInput        │──► 高斯延迟模拟触摸
-                               │ (Keystore 解密→逐字输入) │
-                               └──────────────────────────┘
+```mermaid
+flowchart TD
+    A[微信支付键盘出现] --> B[系统指纹或面容验证]
+    B --> C{验证结果}
+    C -->|通过| D[自动输入支付密码]
+    C -->|取消或错误| E[恢复支付键盘]
+    E --> F[手动输入密码]
+    E -->|按音量键| B
+    D --> G[由微信继续处理付款]
+    F --> G
 ```
 
-## 实现原理
+识别未通过时，可以继续尝试。BioPay 只协助输入密码，最终支付结果以微信提示为准。
 
-1. 在设置页录入 6 位支付密码，以 AES-GCM 加密后存放在 AndroidKeyStore 中。
-2. 微信支付键盘弹出时，模块唤起系统生物识别对话框。
-3. 验证通过即解密密码，以接近真人节奏的高斯延迟模拟触摸逐字输入。
-4. 验证失败或取消则落回普通键盘，不影响正常支付。
+## 安装与设置
 
-如实说明：为兼容弱面容设备，生物识别在这里是应用层门控，而非绑定生物特征的 `CryptoObject`（弱面容在部分设备上无法授权后者）。请先阅读代码，再决定是否信任本模块。
+**需要：** Android 9.0+ 版本、支持 LibXposed API 102 的 LSPosed，以及设备上已录入的指纹或面容。
 
-## 使用步骤
+1. 从 [Releases](https://github.com/kiriashi/BioPay/releases) 下载正式版 APK 并安装。
+2. 在 LSPosed 中启用 BioPay，勾选微信作用域。
+3. 强制停止微信，再重新打开。
+4. 进入微信“我 → 设置”，长按页面标题“设置”，打开 BioPay 设置页。
+5. 输入六位微信支付密码，选择指纹、面容或双选模式，完成验证后保存。
+6. 下次付款时，按系统提示验证即可。
 
-1. 从 [Releases](https://github.com/kiriashi/BioPay/releases) 下载最新 APK 并安装。
-2. 在 LSPosed 管理器中勾选 BioPay，作用域选择微信（`com.tencent.mm`）（需支持 LibXposed API 102）。
-3. 重启微信（在 LSPosed 中重启作用域，或强制停止微信后重新打开）。
-4. 打开微信 `我 → 设置`，长按“设置”唤起模块设置页。
-5. 录入支付密码，打开指纹／面容开关，保存时按提示完成一次生物验证即可。
+### 弱面容设备兼容设置
 
-环境要求：Android 9.0+，设备已录入指纹或面容。
+部分厂商会将设备的面部识别传感器的安全等级定义为 **Class 1**（便利级，值4095）从而导致 **BiometricPrompt** 无法调用。本模块可在微信面容认证预检中，让这类传感器满足 **Class 2**（弱生物识别）请求，并与 Class 3 指纹区分。如果您的设备无法正常使用面容支付，可尝试在 LSPosed 中额外勾选 BioPay 的“系统框架（system）”作用域，然后**重启手机**即可开启。
 
-## 绿色声明
+普通指纹和面容支付正常的设备无需勾选，仅勾选微信作用域即可使用。
 
-- **单权限**：只需要 `USE_BIOMETRIC`，无 `INTERNET`、存储、通知等任何其他权限。
-- **零联网**：源码无一行网络代码，模块自身运行时不产生任何网络连接。
-- **零后门**：无恶意代码——零组件不驻留，单权限零联网，全开源可审计。
-- **零第三方库**：APK 内只有系统 API 与自家代码（`libxposed` 仅编译期依赖，不打包）。
-- **日志默认关闭**：调试日志需手动开启，且只写本机应用目录，从不外传。
-- **全开源可验证**：AGPL-3.0 协议，Release 同时附带 debug 包与完整源码。
+注意：兼容处理仅在微信面容认证预检中放行 Class 1 传感器的 Class 2 请求，不会让它满足 Class 3 请求。它不会提高面容传感器本身的防伪能力，请根据设备情况决定是否启用。
 
-## 技术栈
+感谢 [FaceBiometricFix](https://github.com/WAYYYAW/FaceBiometricFix) 项目提供的 Class 1 面容兼容技术思路。
 
-- **编程语言**：100% Kotlin（目标 JVM 17，工具链 21）。
-- **UI**：原生 View 自绘 Material 3 控件（`settings/ui`），无 Compose、无第三方 UI 库。
-- **Xposed 框架**：LSPosed LibXposed API 102，Hook 实现位于 `hook` 包。
-- **加密存储**：AndroidKeyStore AES-GCM，密码版本策略平滑处理存储格式升级。
-- **测试**：JUnit 4 单测覆盖纯逻辑单元（`test/` 与 `main/` 包结构一一对应）。
-- **构建**：Gradle＋R8 混淆，GitHub Actions 全自动 CI／Release。
+## 日常使用
 
-## 适配与反馈
+- **切换验证方式：** 打开 BioPay 设置页，选择模式并验证后保存。
+- **临时手动输入：** 点击取消验证按钮，或使用系统的返回导航栏按钮。
+- **重新验证：** 在支付键盘显示时按一次音量键可切换到生物认证页面。
+- **关闭功能：** 在设置页关闭指纹和面容开关后保存，微信恢复普通密码支付。
+- **清除密码：** 长按设置页的清除按钮，按提示完成验证后清除。
 
-微信改版若导致失效，请带上微信版本号、Android 版本、LSPosed 版本提 issue，也欢迎加入 [Telegram 交流群](https://t.me/biopaychat)反馈交流。请仅在你有权修改的设备与账号上使用本模块。
+## 隐私与安全
 
-## 后续计划（TODO）
+- 支付密码加密保存在本机，模块不请求联网权限，也不会上传密码或生物信息。
+- 指纹和面容由系统负责识别；BioPay 在收到验证成功后才解密并输入密码。
+- 兼容面容设备的验证不等同于硬件绑定的密码解密保护。
+- 源代码绿色开源，按 [AGPL-3.0](https://github.com/kiriashi/BioPay/blob/main/LICENSE) 公开，可自行审阅。
 
-- 当前版本仅适配微信（`com.tencent.mm`），其他支付应用（支付宝、云闪付等）尚未适配。
+## 遇到问题
 
-## 构建
+先确认 LSPosed 中模块及作用域已启用、设备已录入生物信息，并在更新后重启手机。如果微信更新后功能失效，请在 [Issues](https://github.com/kiriashi/BioPay/issues) 提供手机型号、Android、微信及 LSPosed 版本，以及具体操作和错误提示；不要提供支付密码。
 
-Debug 构建：
+也可以加入 [Telegram 交流群](https://t.me/biopaychat)。
 
-```bash
-./gradlew assembleDebug
-```
+## 开源协议与免责声明
 
-签名 release 构建的密钥材料来自环境变量（CI secrets）或未跟踪的 `local.properties` 文件：
+Copyright (C) 2026 kiriashi。项目以 [GNU Affero General Public License v3.0](https://github.com/kiriashi/BioPay/blob/main/LICENSE) 或更新版本开源，修改和再分发须遵守该协议。
 
-```text
-BIOPAY_RELEASE_STORE_FILE
-BIOPAY_RELEASE_STORE_PASSWORD
-BIOPAY_RELEASE_KEY_ALIAS
-BIOPAY_RELEASE_KEY_PASSWORD
-```
-
-```properties
-# local.properties（不要提交此文件）
-RELEASE_STORE_FILE=../biopay.keystore
-RELEASE_STORE_PASSWORD=<keystore password>
-RELEASE_KEY_ALIAS=<key alias>
-RELEASE_KEY_PASSWORD=<key password>
-```
-
-缺少密钥材料时构建会自动降级为未签名 APK。为保护隐私和避免不必要的麻烦，请勿将个人 keystore 提交到仓库。
-
-## 开源协议
-
-本项目基于 [GNU Affero General Public License v3.0](LICENSE) 协议开源。
-
-```
-Copyright (C) 2026 kiriashi
-```
-
-BioPay 是自由软件，你可以在自由软件基金会发布的 GNU Affero 通用公共许可证第三版（或任何更新版本）条款下重新分发或修改。分发或通过网络部署的修改版同样须以 AGPL-3.0 开源并提供对应源码。不提供任何担保。
-
-## 免责声明
-
-本程序仅供学习研究、技术交流以及个人合法合规测试使用。请勿将本工具用于任何违法违规或违反相关平台服务协议的活动。使用本模块造成的任何账号封禁、数据丢失、法律纠纷或其他直接／间接损失，均由使用者自行承担，作者不对此承担任何责任。
+请仅在自己有权使用和修改的设备、账号上使用，并遵守相关法律及平台规则。本项目不提供任何担保；使用产生的账号、数据或支付风险由使用者自行承担。
