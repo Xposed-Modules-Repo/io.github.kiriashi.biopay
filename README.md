@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/kiriashi/BioPay/main/images/app-icon.webp" width="160" alt="BioPay 应用图标" />
+<img src="https://raw.githubusercontent.com/kiriashi/BioPay/v2.0.1/images/app-icon.webp" width="160" alt="BioPay 应用图标" />
 
 <h1>BioPay</h1>
 
@@ -9,7 +9,7 @@
 [![Release](https://img.shields.io/github/v/release/kiriashi/BioPay?style=flat)](https://github.com/kiriashi/BioPay/releases)
 [![Stars](https://img.shields.io/github/stars/kiriashi/BioPay?style=flat)](https://github.com/kiriashi/BioPay/stargazers)
 [![Downloads](https://img.shields.io/github/downloads/kiriashi/BioPay/total?style=flat)](https://github.com/kiriashi/BioPay/releases)
-[![License](https://img.shields.io/github/license/kiriashi/BioPay?style=flat)](https://github.com/kiriashi/BioPay/blob/main/LICENSE)
+[![License](https://img.shields.io/github/license/kiriashi/BioPay?style=flat)](https://github.com/kiriashi/BioPay/blob/v2.0.1/LICENSE)
 [![Android](https://img.shields.io/badge/Android-9.0%2B-green.svg?style=flat)](https://developer.android.com)
 [![LSPosed](https://img.shields.io/badge/LSPosed-API%20102-purple.svg?style=flat)](https://github.com/LSPosed/LSPosed)
 [![Telegram](https://img.shields.io/badge/Telegram-交流群-blue.svg?style=flat)](https://t.me/biopaychat)
@@ -25,7 +25,7 @@
 
 ## 支持应用与设置入口
 
-| 应用 | 在哪里打开 BioPay 设置 |
+| 应用名称 | 在哪里打开 BioPay 设置 |
 | --- | --- |
 | 微信 | “我 → 设置”，长按页面标题“设置” |
 | QQ | 聊天页右上角“+”菜单中最下方的“生物支付” |
@@ -53,7 +53,7 @@ flowchart TD
 
 ## 安装与设置
 
-**需要：** Android 9.0+ 版本、支持 LibXposed API 102 的 LSPosed，以及设备上已录入且受系统生物认证支持的指纹或面容。
+**需要：** Android 10+ 版本、支持 LibXposed API 102 的 LSPosed，以及设备上已录入指纹或面容。
 
 1. 从 [Releases](https://github.com/kiriashi/BioPay/releases) 下载 APK，并查看该版本的支持范围。
 2. 在 LSPosed 中启用 BioPay，勾选需要使用的支付应用作用域。
@@ -76,9 +76,9 @@ BioPay 通过 Android 的 **BiometricPrompt** 调用指纹或面容。部分设�
 
 ## 隐私与安全
 
-- 支付密码使用 AES-256-GCM 加密，密钥由 Android Keystore 管理；密文保存在对应支付应用的本地私有数据中，并按应用隔离。硬件保护能力取决于设备。
+- 支付密码使用 AES-256-GCM 加密保存于本地并按应用隔离；密钥由 Android Keystore 管理，硬件保护能力取决于设备。
 - BioPay 不申请网络或剪贴板权限，也不会收集或上传支付密码、生物信息。
-- 指纹和面容由 Android 系统识别。认证成功后，BioPay 才解密并输入密码；认证校验由支付流程执行，Keystore 密钥本身不要求生物认证。
+- 指纹和面容由 Android 系统识别。认证成功后，BioPay 才解密并输入密码，完成后会自动清除明文信息；
 
 ## 遇到问题
 
@@ -89,11 +89,10 @@ BioPay 通过 Android 的 **BiometricPrompt** 调用指纹或面容。部分设�
 ## 致谢
 
 * [FingerprintPay](https://github.com/eritpchy/FingerprintPay)
-* [APatch](https://github.com/bmax121/APatch)
 * [LSPosed](https://github.com/LSPosed/LSPosed)
 
 ## 开源协议与免责声明
 
-Copyright (C) 2026 kiriashi。项目以 [GNU Affero General Public License v3.0 或更新版本](https://github.com/kiriashi/BioPay/blob/main/LICENSE) 开源，修改和再分发须遵守该协议。
+Copyright (C) 2026 kiriashi。项目以 [GNU Affero General Public License v3.0 或更新版本](https://github.com/kiriashi/BioPay/blob/v2.0.1/LICENSE) 开源，修改和再分发须遵守该协议。
 
 请仅在自己有权使用和修改的设备、账号上使用，并遵守相关法律及平台规则。本项目不提供任何担保；使用产生的账号、数据或支付风险由使用者自行承担。
