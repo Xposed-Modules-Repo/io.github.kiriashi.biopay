@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/kiriashi/BioPay/v2.1.1/images/app-icon.webp" width="160" alt="BioPay 应用图标" />
+<img src="https://raw.githubusercontent.com/kiriashi/BioPay/v2.1.2/images/app-icon.webp" width="160" alt="BioPay 应用图标" />
 
 <h1>BioPay</h1>
 
@@ -9,7 +9,7 @@
 [![Release](https://img.shields.io/github/v/release/kiriashi/BioPay?style=flat)](https://github.com/kiriashi/BioPay/releases)
 [![Stars](https://img.shields.io/github/stars/kiriashi/BioPay?style=flat)](https://github.com/kiriashi/BioPay/stargazers)
 [![Downloads](https://img.shields.io/github/downloads/Xposed-Modules-Repo/io.github.kiriashi.biopay/total?style=flat)](https://github.com/Xposed-Modules-Repo/io.github.kiriashi.biopay/releases)
-[![License](https://img.shields.io/github/license/kiriashi/BioPay?style=flat)](https://github.com/kiriashi/BioPay/blob/v2.1.1/LICENSE)
+[![License](https://img.shields.io/github/license/kiriashi/BioPay?style=flat)](https://github.com/kiriashi/BioPay/blob/v2.1.2/LICENSE)
 [![Android](https://img.shields.io/badge/Android-10%2B-green.svg?style=flat)](https://developer.android.com)
 [![LSPosed](https://img.shields.io/badge/LSPosed-API%20102-purple.svg?style=flat)](https://github.com/LSPosed/LSPosed)
 [![Telegram](https://img.shields.io/badge/Telegram-交流群-blue.svg?style=flat)](https://t.me/biopaychat)
@@ -95,6 +95,6 @@ flowchart TD
 
 ## 开源协议与免责声明
 
-Copyright (C) 2026 kiriashi。项目以 [GNU Affero General Public License v3.0 或更新版本](https://github.com/kiriashi/BioPay/blob/v2.1.1/LICENSE) 开源，修改和再分发须遵守该协议。
+Copyright (C) 2026 kiriashi。项目以 [GNU Affero General Public License v3.0 或更新版本](https://github.com/kiriashi/BioPay/blob/v2.1.2/LICENSE) 开源，修改和再分发须遵守该协议。
 
 请仅在自己有权使用和修改的设备、账号上使用，并遵守相关法律及平台规则。本项目不提供任何担保；使用产生的账号、数据或支付风险由使用者自行承担。
